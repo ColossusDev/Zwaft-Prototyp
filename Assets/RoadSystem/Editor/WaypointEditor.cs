@@ -16,7 +16,7 @@ public class WaypointEditor
         }
         else
         {
-            Gizmos.color = Color.yellow * 0.5f; 
+            Gizmos.color = Color.yellow * 1f; 
         }
 
         Gizmos.DrawSphere(waypoint.transform.position, .5f);
@@ -24,22 +24,22 @@ public class WaypointEditor
         Gizmos.color = Color.white;
         Gizmos.DrawLine(waypoint.transform.position + (waypoint.transform.right * waypoint.width / 2), waypoint.transform.position - (waypoint.transform.right * waypoint.width / 2f));
 
-        if (waypoint.prevWaypoint != null)
+        if (waypoint.GetPrevWaypoint() != null)
         {
             Gizmos.color = Color.red;
             Vector3 offset = waypoint.transform.right * waypoint.width / 2f;
-            Vector3 offsetTo = waypoint.prevWaypoint.transform.right * waypoint.prevWaypoint.width / 2f;
+            Vector3 offsetTo = waypoint.GetPrevWaypoint().transform.right * waypoint.GetPrevWaypoint().width / 2f;
 
-            Gizmos.DrawLine(waypoint.transform.position + offset, waypoint.prevWaypoint.transform.position + offsetTo);
+            Gizmos.DrawLine(waypoint.transform.position + offset, waypoint.GetPrevWaypoint().transform.position + offsetTo);
         }
 
-        if (waypoint.nextWaypoint != null)
+        if (waypoint.GetNextWaypoint() != null)
         {
             Gizmos.color = Color.green;
             Vector3 offset = waypoint.transform.right * -waypoint.width / 2f;
-            Vector3 offsetTo = waypoint.nextWaypoint.transform.right * -waypoint.nextWaypoint.width / 2f;
+            Vector3 offsetTo = waypoint.GetNextWaypoint().transform.right * -waypoint.GetNextWaypoint().width / 2f;
 
-            Gizmos.DrawLine(waypoint.transform.position + offset, waypoint.nextWaypoint.transform.position + offsetTo);
+            Gizmos.DrawLine(waypoint.transform.position + offset, waypoint.GetNextWaypoint().transform.position + offsetTo);
         }
     }
 }

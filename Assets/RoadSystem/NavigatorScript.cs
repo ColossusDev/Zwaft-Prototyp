@@ -23,7 +23,7 @@ public class NavigatorScript : MonoBehaviour
     {
         if (movementScript.destinationReached)
         {
-            currentWaypoint = currentWaypoint.nextWaypoint;
+            currentWaypoint = currentWaypoint.GetNextWaypoint();
             movementScript.SetDestination(currentWaypoint.GetPosition());
         }
     }
