@@ -8,12 +8,21 @@ namespace PathCreation.Examples
     {
         public PathCreator path;
         public EndOfPathInstruction endOfPathInstruction;
+        public float watt = 0;
         public float speed = 0;
         float distanceTravelled;
-        float distanceFromMiddle = 1;
+        [SerializeField] float distanceFromMiddle = 3;
+
+        public Collider windCollider;
+        public Collider BikeCollider;
+
+        public bool windSchatten = false;
+        public GameObject toFollow;
 
         void Start()
         {
+            Debug.Log("Bike spawned");
+
             if (path != null)
             {
                 // Subscribed to the pathUpdated event so that we're notified if the path changes during the game
@@ -21,8 +30,52 @@ namespace PathCreation.Examples
             }
         }
 
+        public void SetWindschatten(GameObject bike)
+        {
+            toFollow = bike;
+            windSchatten = true;
+        }
+
+        public void RemoveWindschatten()
+        {
+            toFollow = null;
+            windSchatten = false;
+        }
+
+        private void ManagePostionOnRoad()
+        {
+            float realwatt = watt;
+
+            if (windSchatten)
+            {
+                realwatt = watt * 1.3f;
+            }
+            speed = (realwatt * 1.5f) / 100;
+
+            if(distanceFromMiddle > 2.1f)
+            {
+                distanceFromMiddle -= 0.01f;
+            }
+            else if(distanceFromMiddle < 1.9f)
+            {
+                distanceFromMiddle += 0.01f;
+            }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            other.gameObject.GetComponent<BikePathScript>().SetWindschatten(this.gameObject);
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            other.gameObject.GetComponent<BikePathScript>().RemoveWindschatten();
+        }
+
         void Update()
         {
+            ManagePostionOnRoad();
+
             if (path != null)
             {
                 distanceTravelled += speed * Time.deltaTime;
