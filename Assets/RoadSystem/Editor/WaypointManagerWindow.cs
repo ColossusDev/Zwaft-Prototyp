@@ -51,13 +51,16 @@ public class WaypointManagerWindow : EditorWindow
         {
             CalculateFromVertexPath();
         }
+        if (GUILayout.Button("Delete all Waypoints"))
+        {
+            ClearWaypoint();
+        }
         if (Selection.activeGameObject != null && Selection.activeGameObject.GetComponent<Waypoint>())
         {
             if (GUILayout.Button("Remove Waypoint"))
             {
                 RemoveWaypoint();
             }
-
         }
     }
 
@@ -68,11 +71,13 @@ public class WaypointManagerWindow : EditorWindow
             VertexPath vertexPath = waypointRoot.GetComponent<PathCreator>().editorData.GetVertexPath(waypointRoot.transform);
             if (vertexPath != null)
             {
-                int temp = 1 / waypointSteps;
-                for (float i = 0f; i < 1; i = i + temp)
+                float stepSize = (float)(1f / waypointSteps);
+                Debug.Log("stepSize: " + stepSize);
+                float posOnPath = 0;
+                for (float i = 0f; i < waypointSteps; i++)
                 {
-                    Vector3 position = vertexPath.GetPointAtTime(i, EndOfPathInstruction.Loop);
-                    Vector3 rotation = vertexPath.GetDirection(i, EndOfPathInstruction.Loop);
+                    Vector3 position = vertexPath.GetPointAtTime(posOnPath, EndOfPathInstruction.Loop);
+                    Vector3 rotation = vertexPath.GetDirection(posOnPath, EndOfPathInstruction.Loop);
 
                     GameObject waypointObject = new GameObject("Waypoint " + waypointRoot.childCount, typeof(Waypoint));
                     waypointObject.transform.SetParent(waypointRoot, false);
@@ -87,6 +92,8 @@ public class WaypointManagerWindow : EditorWindow
 
                     waypoint.transform.position = position;
                     waypoint.transform.forward = rotation;
+
+                    posOnPath += stepSize;
                 }
 
                 ConnectLastAndFirstWaypoint();
@@ -144,6 +151,15 @@ public class WaypointManagerWindow : EditorWindow
         for (int i = 0; i < waypointRoot.childCount; i++)
         {
             waypointRoot.GetChild(i).GetComponent<Waypoint>().CalculateAllValues();
+        }
+    }
+
+    void ClearWaypoint()
+    {
+        int temp = waypointRoot.childCount;
+        for (int i = 0; i < temp; i++)
+        {
+            DestroyImmediate(waypointRoot.GetChild(0).GetComponent<Waypoint>().gameObject);
         }
     }
 
