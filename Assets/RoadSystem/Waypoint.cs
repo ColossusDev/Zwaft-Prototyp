@@ -7,7 +7,6 @@ public class Waypoint : MonoBehaviour
     [SerializeField] private Waypoint prevWaypoint;
     [SerializeField] private Waypoint nextWaypoint;
 
-    [Range(4f, 10f)]
     public float width = 10f;
 
     public float elevation;
