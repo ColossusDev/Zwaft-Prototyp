@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using PathCreation;
 
 public class WaypointManagerWindow : EditorWindow
 {
@@ -12,6 +13,8 @@ public class WaypointManagerWindow : EditorWindow
     }
 
     public Transform waypointRoot;
+
+    private int waypointSteps = 100;
 
     public void OnGUI()
     {
@@ -27,6 +30,7 @@ public class WaypointManagerWindow : EditorWindow
         {
             EditorGUILayout.BeginVertical("box");
             DrawButtons();
+            waypointSteps = EditorGUILayout.IntField("Waypoint Amount: ", waypointSteps);
             EditorGUILayout.EndVertical();
         }
 
@@ -43,27 +47,58 @@ public class WaypointManagerWindow : EditorWindow
         {
             ConnectLastAndFirstWaypoint();
         }
-        if (GUILayout.Button("Calculate Road"))
+        if (GUILayout.Button("Calculate based on Vertex Path"))
         {
-            CalculateRoad();
+            CalculateFromVertexPath();
         }
-
-
+        if (GUILayout.Button("Delete all Waypoints"))
+        {
+            ClearWaypoint();
+        }
         if (Selection.activeGameObject != null && Selection.activeGameObject.GetComponent<Waypoint>())
         {
-            if (GUILayout.Button("Create Waypoint Before"))
-            {
-                CreateWayPointBefore();
-            }
-            if (GUILayout.Button("Create Waypoint After"))
-            {
-                CreateWaypointAfter();
-            }
             if (GUILayout.Button("Remove Waypoint"))
             {
                 RemoveWaypoint();
             }
+        }
+    }
 
+    void CalculateFromVertexPath()
+    {
+        if (waypointRoot.GetComponent<PathCreator>() != null)
+        {
+            VertexPath vertexPath = waypointRoot.GetComponent<PathCreator>().editorData.GetVertexPath(waypointRoot.transform);
+            if (vertexPath != null)
+            {
+                float stepSize = (float)(1f / waypointSteps);
+                Debug.Log("stepSize: " + stepSize);
+                float posOnPath = 0;
+                for (float i = 0f; i < waypointSteps; i++)
+                {
+                    Vector3 position = vertexPath.GetPointAtTime(posOnPath, EndOfPathInstruction.Loop);
+                    Vector3 rotation = vertexPath.GetDirection(posOnPath, EndOfPathInstruction.Loop);
+
+                    GameObject waypointObject = new GameObject("Waypoint " + waypointRoot.childCount, typeof(Waypoint));
+                    waypointObject.transform.SetParent(waypointRoot, false);
+
+                    Waypoint waypoint = waypointObject.GetComponent<Waypoint>();
+
+                    if (waypointRoot.childCount > 1)
+                    {
+                        waypoint.SetPrevWaypoint(waypointRoot.GetChild(waypointRoot.childCount - 2).GetComponent<Waypoint>());
+                        waypoint.GetPrevWaypoint().SetNextWaypoint(waypoint);
+                    }
+
+                    waypoint.transform.position = position;
+                    waypoint.transform.forward = rotation;
+
+                    posOnPath += stepSize;
+                }
+
+                ConnectLastAndFirstWaypoint();
+                CalculateRoad();
+            }
         }
     }
 
@@ -83,60 +118,6 @@ public class WaypointManagerWindow : EditorWindow
         }
 
         Selection.activeGameObject = waypoint.gameObject;
-    }
-
-    void CreateWayPointBefore()
-    {
-        GameObject waypointObject = new GameObject("Waypoint " + waypointRoot.childCount, typeof(Waypoint));
-        waypointObject.transform.SetParent(waypointRoot, false);
-
-        Waypoint newWaypoint = waypointObject.GetComponent<Waypoint>();
-
-        Waypoint selectedWaypoint = Selection.activeGameObject.GetComponent<Waypoint>();
-
-        waypointObject.transform.position = selectedWaypoint.transform.position;
-        waypointObject.transform.forward = selectedWaypoint.transform.forward;
-
-        if (selectedWaypoint.GetPrevWaypoint() != null)
-        {
-            newWaypoint.SetPrevWaypoint(selectedWaypoint.GetPrevWaypoint());
-            selectedWaypoint.GetPrevWaypoint().SetNextWaypoint(newWaypoint);
-        }
-
-        newWaypoint.SetNextWaypoint(selectedWaypoint);
-
-        selectedWaypoint.SetPrevWaypoint(newWaypoint);
-
-        newWaypoint.transform.SetSiblingIndex(selectedWaypoint.transform.GetSiblingIndex());
-
-        Selection.activeGameObject = newWaypoint.gameObject;
-    }
-
-    void CreateWaypointAfter()
-    {
-        GameObject waypointObject = new GameObject("Waypoint " + waypointRoot.childCount, typeof(Waypoint));
-        waypointObject.transform.SetParent(waypointRoot, false);
-
-        Waypoint newWaypoint = waypointObject.GetComponent<Waypoint>();
-
-        Waypoint selectedWaypoint = Selection.activeGameObject.GetComponent<Waypoint>();
-
-        waypointObject.transform.position = selectedWaypoint.transform.position;
-        waypointObject.transform.forward = selectedWaypoint.transform.forward;
-
-        newWaypoint.SetPrevWaypoint(selectedWaypoint);
-
-        if (selectedWaypoint.GetNextWaypoint() != null)
-        {
-            selectedWaypoint.GetNextWaypoint().SetPrevWaypoint(newWaypoint);
-            newWaypoint.SetNextWaypoint(selectedWaypoint.GetNextWaypoint());
-        }
-
-        selectedWaypoint.SetNextWaypoint(newWaypoint);
-
-        newWaypoint.transform.SetSiblingIndex(selectedWaypoint.transform.GetSiblingIndex());
-
-        Selection.activeGameObject = newWaypoint.gameObject;
     }
 
     void RemoveWaypoint()
@@ -170,6 +151,15 @@ public class WaypointManagerWindow : EditorWindow
         for (int i = 0; i < waypointRoot.childCount; i++)
         {
             waypointRoot.GetChild(i).GetComponent<Waypoint>().CalculateAllValues();
+        }
+    }
+
+    void ClearWaypoint()
+    {
+        int temp = waypointRoot.childCount;
+        for (int i = 0; i < temp; i++)
+        {
+            DestroyImmediate(waypointRoot.GetChild(0).GetComponent<Waypoint>().gameObject);
         }
     }
 
