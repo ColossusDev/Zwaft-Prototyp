@@ -8,7 +8,11 @@ public class MovementScript : MonoBehaviour
     public float rotationSpeed = 120;
     public float stopDistance = 2.5f;
     public Vector3 destination = new Vector3(5, 5, 5);
-    public bool destinationReached = false; 
+    public bool destinationReached = false;
+
+    // true = in Road Erstellungsrichtung
+    public bool richtung = true;
+    public float crossPosition = 0;
 
     private void Update()
     {
@@ -38,7 +42,6 @@ public class MovementScript : MonoBehaviour
     {
         this.destination = destination;
         destinationReached = false;
-
     }
 
 

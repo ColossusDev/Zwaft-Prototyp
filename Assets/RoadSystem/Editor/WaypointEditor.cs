@@ -16,7 +16,7 @@ public class WaypointEditor
         }
         else
         {
-            Gizmos.color = Color.yellow * 1f; 
+            Gizmos.color = Color.yellow * 0.5f; 
         }
 
         Gizmos.DrawSphere(waypoint.transform.position, .5f);

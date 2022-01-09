@@ -30,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3477511831664655166}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 86, y: 0, z: -68.1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.87541, y: 0.84927, z: 3.3128}
   m_Children: []
   m_Father: {fileID: 0}
@@ -107,7 +107,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3477511831664655166}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 80
   m_Drag: 1
   m_AngularDrag: 1
   m_UseGravity: 0
@@ -128,10 +128,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 15
-  rotationSpeed: 260
-  stopDistance: 4
+  rotationSpeed: 400
+  stopDistance: 3
   destination: {x: 5, y: 5, z: 5}
   destinationReached: 0
+  richtung: 0
+  crossPosition: 0
 --- !u!114 &3477511831664655167
 MonoBehaviour:
   m_ObjectHideFlags: 0

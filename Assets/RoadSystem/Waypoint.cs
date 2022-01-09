@@ -12,12 +12,38 @@ public class Waypoint : MonoBehaviour
 
     public float elevation;
 
-    public Vector3 GetPosition()
+    public Vector3 GetPosition(bool direction, MovementScript agent)
     {
         Vector3 minBound = transform.position + transform.right * width / 2f;
         Vector3 maxBound = transform.position - transform.right * width / 2f;
 
-        return Vector3.Lerp(minBound, maxBound, Random.Range(0.3f, 0.7f));
+        if (direction)
+        {
+            if (agent.crossPosition > 0.5f || agent.crossPosition < 0)
+            {
+                float crossing = Random.Range(0f, 0.4f);
+                agent.crossPosition = crossing;
+            }
+            else
+            {
+                float crossing = agent.crossPosition;
+            }
+            
+            return Vector3.Lerp(minBound, maxBound, agent.crossPosition);
+        }
+        else
+        {
+            if (agent.crossPosition > 1f || agent.crossPosition < 0.5f)
+            {
+                float crossing = Random.Range(0.6f, 1f);
+                agent.crossPosition = crossing;
+            }
+            else
+            {
+                float crossing = agent.crossPosition;
+            }
+            return Vector3.Lerp(minBound, maxBound, agent.crossPosition);
+        }
     }
 
     public Waypoint GetPrevWaypoint()
@@ -30,7 +56,7 @@ public class Waypoint : MonoBehaviour
     }
     public Waypoint GetNextWaypoint()
     {
-        return prevWaypoint;
+        return nextWaypoint;
     }
     public void SetNextWaypoint(Waypoint wp)
     {

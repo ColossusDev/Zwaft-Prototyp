@@ -30,7 +30,7 @@ public class DummySpawner : MonoBehaviour
             if (bikeAmount >= 1)
             {
                 GameObject go = Instantiate(prefabDummy);
-                go.GetComponent<MovementScript>().movementSpeed = Random.Range(12f, 40f);
+                go.GetComponent<MovementScript>().movementSpeed = Random.Range(15f, 25f);
                 go.GetComponent<NavigatorScript>().currentWaypoint = startWaypoint;
                 bikeAmount -= 1;
             }

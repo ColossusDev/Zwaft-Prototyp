@@ -15,7 +15,8 @@ public class NavigatorScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        movementScript.SetDestination(currentWaypoint.GetPosition());
+        movementScript = GetComponent<MovementScript>();
+        movementScript.SetDestination(currentWaypoint.GetPosition(movementScript.richtung, movementScript));
     }
 
     // Update is called once per frame
@@ -23,8 +24,17 @@ public class NavigatorScript : MonoBehaviour
     {
         if (movementScript.destinationReached)
         {
-            currentWaypoint = currentWaypoint.GetNextWaypoint();
-            movementScript.SetDestination(currentWaypoint.GetPosition());
+            if (movementScript.richtung)
+            {
+                currentWaypoint = currentWaypoint.GetNextWaypoint();
+                movementScript.SetDestination(currentWaypoint.GetPosition(movementScript.richtung, movementScript));
+            }
+            else
+            {
+                currentWaypoint = currentWaypoint.GetPrevWaypoint();
+                movementScript.SetDestination(currentWaypoint.GetPosition(movementScript.richtung, movementScript));
+            }
+            
         }
     }
 }
