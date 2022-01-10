@@ -25,25 +25,27 @@ public class NavigatorScript : MonoBehaviour
     {
         if (movementScript.destinationReached)
         {
-            int rngRoadChange = 0;
-            if (!changedRoad && currentWaypoint.crossing)
+            if(movementScript.richtung)
             {
-                rngRoadChange = Random.Range(0, 2);
-                if (rngRoadChange == 1)
+                if (currentWaypoint.GetNextAlternativWaypoint() != null)
                 {
-                    currentWaypoint = currentWaypoint.GetConnectiongRoadWaypoint();
-                    changedRoad = true;
+                    currentWaypoint = currentWaypoint.GetNextAlternativWaypoint();
+                }
+                else
+                {
+                    currentWaypoint = currentWaypoint.GetNextWaypoint();
                 }
             }
-            if(rngRoadChange == 0 && movementScript.richtung)
+            else
             {
-                currentWaypoint = currentWaypoint.GetNextWaypoint();
-                changedRoad = false;
-            }
-            else if(rngRoadChange == 0)
-            {
-                currentWaypoint = currentWaypoint.GetPrevWaypoint();
-                changedRoad = false;
+                if (currentWaypoint.GetPrevAlternativWaypoint() != null)
+                {
+                    currentWaypoint = currentWaypoint.GetPrevAlternativWaypoint();
+                }
+                else
+                {
+                    currentWaypoint = currentWaypoint.GetPrevWaypoint();
+                }
             }
 
             movementScript.SetDestination(currentWaypoint.GetPosition(movementScript.richtung, movementScript));

@@ -7,20 +7,12 @@ public class Waypoint : MonoBehaviour
     [SerializeField] private Waypoint prevWaypoint;
     [SerializeField] private Waypoint nextWaypoint;
 
-    [SerializeField] private Waypoint connectiongRoadWaypoint;
+    [SerializeField] private Waypoint prevAlternativWaypoint;
+    [SerializeField] private Waypoint nextAlternativWaypoint;
 
     public float width = 10f;
-    public bool crossing = false;
 
     public float elevation;
-
-    private void Start()
-    {
-        if (connectiongRoadWaypoint != null && connectiongRoadWaypoint.connectiongRoadWaypoint != null)
-        {
-            crossing = true;
-        }
-    }
 
     public Vector3 GetPosition(bool direction, MovementScript agent)
     {
@@ -29,16 +21,11 @@ public class Waypoint : MonoBehaviour
 
         if (direction)
         {
-            if (agent.crossPosition > 0.5f || agent.crossPosition < 0)
+            if (agent.crossPosition > 0.5f || agent.crossPosition < 0.01f)
             {
                 float crossing = Random.Range(0f, 0.4f);
                 agent.crossPosition = crossing;
             }
-            else
-            {
-                float crossing = agent.crossPosition;
-            }
-            
             return Vector3.Lerp(minBound, maxBound, agent.crossPosition);
         }
         else
@@ -47,10 +34,6 @@ public class Waypoint : MonoBehaviour
             {
                 float crossing = Random.Range(0.6f, 1f);
                 agent.crossPosition = crossing;
-            }
-            else
-            {
-                float crossing = agent.crossPosition;
             }
             return Vector3.Lerp(minBound, maxBound, agent.crossPosition);
         }
@@ -72,10 +55,13 @@ public class Waypoint : MonoBehaviour
     {
         nextWaypoint = wp;
     }
-
-    public Waypoint GetConnectiongRoadWaypoint()
+    public Waypoint GetPrevAlternativWaypoint()
     {
-        return connectiongRoadWaypoint;
+        return prevAlternativWaypoint;
+    }
+    public Waypoint GetNextAlternativWaypoint()
+    {
+        return nextAlternativWaypoint;
     }
 
     public void CalculateAllValues()

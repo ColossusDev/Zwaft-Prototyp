@@ -31,6 +31,15 @@ public class DummySpawner : MonoBehaviour
             {
                 GameObject go = Instantiate(prefabDummy);
                 go.GetComponent<MovementScript>().movementSpeed = Random.Range(15f, 25f);
+                int rng = Random.Range(0, 2);
+                if (rng==0)
+                {
+                    go.GetComponent<MovementScript>().richtung = false;
+                }
+                else
+                {
+                    go.GetComponent<MovementScript>().richtung = true;
+                }
                 go.GetComponent<NavigatorScript>().currentWaypoint = startWaypoint;
                 bikeAmount -= 1;
             }

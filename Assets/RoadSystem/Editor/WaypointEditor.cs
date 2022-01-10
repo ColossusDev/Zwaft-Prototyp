@@ -42,14 +42,24 @@ public class WaypointEditor
             Gizmos.DrawLine(waypoint.transform.position + offset, waypoint.GetNextWaypoint().transform.position + offsetTo);
         }
 
-        if (waypoint.GetConnectiongRoadWaypoint() != null)
+        if (waypoint.GetNextAlternativWaypoint() != null)
         {
             Gizmos.color = Color.blue;
             Vector3 offset = waypoint.transform.right * -waypoint.width / 2f;
-            Vector3 offsetTo = waypoint.GetConnectiongRoadWaypoint().transform.right * -waypoint.GetConnectiongRoadWaypoint().width / 2f;
+            Vector3 offsetTo = waypoint.GetNextAlternativWaypoint().transform.right * -waypoint.GetNextAlternativWaypoint().width / 2f;
 
-            Gizmos.DrawLine(waypoint.transform.position + offset, waypoint.GetConnectiongRoadWaypoint().transform.position + offsetTo);
-            Gizmos.DrawLine(waypoint.transform.position - offset, waypoint.GetConnectiongRoadWaypoint().transform.position - offsetTo);
+            Gizmos.DrawLine(waypoint.transform.position + offset, waypoint.GetNextAlternativWaypoint().transform.position + offsetTo);
+            Gizmos.DrawLine(waypoint.transform.position, waypoint.GetNextAlternativWaypoint().transform.position);
+        }
+
+        if (waypoint.GetPrevAlternativWaypoint() != null)
+        {
+            Gizmos.color = Color.blue;
+            Vector3 offset = waypoint.transform.right * -waypoint.width / 2f;
+            Vector3 offsetTo = waypoint.GetPrevAlternativWaypoint().transform.right * waypoint.GetPrevAlternativWaypoint().width / 2f;
+
+            Gizmos.DrawLine(waypoint.transform.position + offset, waypoint.GetPrevAlternativWaypoint().transform.position + offsetTo);
+            Gizmos.DrawLine(waypoint.transform.position, waypoint.GetPrevAlternativWaypoint().transform.position);
         }
 
     }

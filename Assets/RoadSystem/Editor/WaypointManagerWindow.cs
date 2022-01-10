@@ -127,51 +127,6 @@ public class WaypointManagerWindow : EditorWindow
         }
     }
 
-    void CalculateFromVertexPath2()
-    {
-        if (waypointRoot.GetComponent<PathCreator>() != null)
-        {
-            VertexPath vertexPath = waypointRoot.GetComponent<PathCreator>().editorData.GetVertexPath(waypointRoot.transform);
-            if (vertexPath != null)
-            {
-                float stepSize = (float)(1f / waypointSteps);
-                Debug.Log("stepSize: " + stepSize);
-                float posOnPath = 0;
-
-                //Vector Erkennung (mehr Waypoints in Kurven)
-                Vector3 currentDirection = new Vector3(0,0,0);
-
-
-                for (float i = 0f; i < waypointSteps; i++)
-                {
-                    Vector3 position = vertexPath.GetPointAtTime(posOnPath, EndOfPathInstruction.Loop);
-                    Vector3 rotation = vertexPath.GetDirection(posOnPath, EndOfPathInstruction.Loop);
-
-                    GameObject waypointObject = new GameObject("Waypoint " + waypointRoot.childCount, typeof(Waypoint));
-                    waypointObject.transform.SetParent(waypointRoot, false);
-
-                    Waypoint waypoint = waypointObject.GetComponent<Waypoint>();
-
-                    if (waypointRoot.childCount > 1)
-                    {
-                        waypoint.SetPrevWaypoint(waypointRoot.GetChild(waypointRoot.childCount - 2).GetComponent<Waypoint>());
-                        waypoint.GetPrevWaypoint().SetNextWaypoint(waypoint);
-                    }
-
-                    waypoint.transform.position = position;
-                    waypoint.transform.forward = rotation;
-                    waypoint.width = roadWidth;
-
-                    posOnPath += stepSize;
-                }
-
-
-                ConnectLastAndFirstWaypoint();
-                CalculateRoad();
-            }
-        }
-    }
-
     void CreateWaypoint()
     {
         GameObject waypointObject = new GameObject("Waypoint " + waypointRoot.childCount, typeof(Waypoint));
