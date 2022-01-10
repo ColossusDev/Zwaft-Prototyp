@@ -128,7 +128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 15
-  rotationSpeed: 200
+  rotationSpeed: 400
   stopDistance: 3
   destination: {x: 5, y: 5, z: 5}
   destinationReached: 0

@@ -6,6 +6,7 @@ public class NavigatorScript : MonoBehaviour
 {
     MovementScript movementScript;
     public Waypoint currentWaypoint;
+    bool changedRoad = false;
 
     private void Awake()
     {
@@ -24,17 +25,28 @@ public class NavigatorScript : MonoBehaviour
     {
         if (movementScript.destinationReached)
         {
-            if (movementScript.richtung)
+            int rngRoadChange = 0;
+            if (!changedRoad && currentWaypoint.crossing)
+            {
+                rngRoadChange = Random.Range(0, 2);
+                if (rngRoadChange == 1)
+                {
+                    currentWaypoint = currentWaypoint.GetConnectiongRoadWaypoint();
+                    changedRoad = true;
+                }
+            }
+            if(rngRoadChange == 0 && movementScript.richtung)
             {
                 currentWaypoint = currentWaypoint.GetNextWaypoint();
-                movementScript.SetDestination(currentWaypoint.GetPosition(movementScript.richtung, movementScript));
+                changedRoad = false;
             }
-            else
+            else if(rngRoadChange == 0)
             {
                 currentWaypoint = currentWaypoint.GetPrevWaypoint();
-                movementScript.SetDestination(currentWaypoint.GetPosition(movementScript.richtung, movementScript));
+                changedRoad = false;
             }
-            
+
+            movementScript.SetDestination(currentWaypoint.GetPosition(movementScript.richtung, movementScript));
         }
     }
 }

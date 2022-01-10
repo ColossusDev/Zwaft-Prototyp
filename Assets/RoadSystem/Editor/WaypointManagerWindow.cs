@@ -16,7 +16,7 @@ public class WaypointManagerWindow : EditorWindow
 
     private int waypointSteps = 100;
     private int roadWidth = 10;
-    private float rotationDifference = 0.1f;
+    private float rotationDifference = 0.01f;
 
     public void OnGUI()
     {
@@ -88,7 +88,6 @@ public class WaypointManagerWindow : EditorWindow
 
                 for (float i = 0f; i < waypointSteps+1; i++)
                 {
-                    Debug.Log("PosOnPath: " + posOnPath);
                     Vector3 position = vertexPath.GetPointAtTime(posOnPath, EndOfPathInstruction.Stop);
                     Vector3 rotation = vertexPath.GetDirection(posOnPath, EndOfPathInstruction.Stop);
 

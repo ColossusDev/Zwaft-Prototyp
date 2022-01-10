@@ -7,9 +7,20 @@ public class Waypoint : MonoBehaviour
     [SerializeField] private Waypoint prevWaypoint;
     [SerializeField] private Waypoint nextWaypoint;
 
+    [SerializeField] private Waypoint connectiongRoadWaypoint;
+
     public float width = 10f;
+    public bool crossing = false;
 
     public float elevation;
+
+    private void Start()
+    {
+        if (connectiongRoadWaypoint != null && connectiongRoadWaypoint.connectiongRoadWaypoint != null)
+        {
+            crossing = true;
+        }
+    }
 
     public Vector3 GetPosition(bool direction, MovementScript agent)
     {
@@ -61,6 +72,12 @@ public class Waypoint : MonoBehaviour
     {
         nextWaypoint = wp;
     }
+
+    public Waypoint GetConnectiongRoadWaypoint()
+    {
+        return connectiongRoadWaypoint;
+    }
+
     public void CalculateAllValues()
     {
         if (nextWaypoint != null)

@@ -41,5 +41,16 @@ public class WaypointEditor
 
             Gizmos.DrawLine(waypoint.transform.position + offset, waypoint.GetNextWaypoint().transform.position + offsetTo);
         }
+
+        if (waypoint.GetConnectiongRoadWaypoint() != null)
+        {
+            Gizmos.color = Color.blue;
+            Vector3 offset = waypoint.transform.right * -waypoint.width / 2f;
+            Vector3 offsetTo = waypoint.GetConnectiongRoadWaypoint().transform.right * -waypoint.GetConnectiongRoadWaypoint().width / 2f;
+
+            Gizmos.DrawLine(waypoint.transform.position + offset, waypoint.GetConnectiongRoadWaypoint().transform.position + offsetTo);
+            Gizmos.DrawLine(waypoint.transform.position - offset, waypoint.GetConnectiongRoadWaypoint().transform.position - offsetTo);
+        }
+
     }
 }
