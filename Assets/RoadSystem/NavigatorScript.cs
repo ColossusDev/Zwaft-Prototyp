@@ -6,7 +6,6 @@ public class NavigatorScript : MonoBehaviour
 {
     MovementScript movementScript;
     public Waypoint currentWaypoint;
-    bool changedRoad = false;
 
     private void Awake()
     {
